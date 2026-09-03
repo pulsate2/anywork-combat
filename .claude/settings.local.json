@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -fsSL https://registry.npmjs.org/@anthropic-ai/claude-code/latest)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -fsSL https://claude.ai/install.sh -o /tmp/cc_install.sh)",
+      "Read(//tmp/**)"
+    ]
+  }
+}

@@ -73,8 +73,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && npm install -g npm@latest  \
     && rm -rf /var/lib/apt/lists/*
 
-run npm install -g @anthropic-ai/claude-code @twsxtd/hapi @openai/codex
-run npm install -g pnpm
+RUN npm install -g @twsxtd/hapi @openai/codex pnpm
+
+# claude 原生二进制来自平台相关的 optionalDependency，postinstall 漏跑就只剩报错桩；install.cjs 不联网，重跑幂等
+RUN npm install -g @anthropic-ai/claude-code --include=optional --foreground-scripts && \
+    node "$(npm root -g)/@anthropic-ai/claude-code/install.cjs" && \
+    claude --version
 
 
 # 安装 Python 依赖
