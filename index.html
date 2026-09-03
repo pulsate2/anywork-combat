@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵境 AetherMind - 自研下一代AI模型</title>
+    <style>
+        /* --- 全局样式与字体 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --dark-bg: #121212;
+            --light-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --card-bg: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', 'Helvetica Neue', 'Arial', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(106, 17, 203, 0.3);
+        }
+
+        /* --- 导航栏 --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(106, 17, 203, 0.15), transparent 60%);
+            animation: pulse 5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.7; }
+        }
+
+        .hero-content {
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem; /* 字体大小可以根据最长的句子调整 */
+            margin-bottom: 0.5rem;
+            color: white;
+            height: 5rem; /* 固定高度防止文字换行时页面跳动 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero .typewriter-cursor {
+            display: inline-block;
+            width: 4px;
+            height: 4rem;
+            background-color: var(--secondary-color);
+            animation: blink 0.7s infinite;
+            vertical-align: bottom;
+            margin-left: 8px; /* 光标与文字的间距 */
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 1rem auto 2.5rem auto;
+        }
+
+        /* --- 其他部分的CSS和之前一样... --- */
+        #features { background-color: var(--light-bg); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 50px; }
+        .feature-card { background: var(--card-bg); padding: 40px 30px; border-radius: 15px; text-align: left; border: 1px solid transparent; transition: all 0.3s ease; transform: translateY(0); }
+        .feature-card:hover { transform: translateY(-10px); border-color: var(--primary-color); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
+        .feature-card .icon { font-size: 2.5rem; margin-bottom: 1.5rem; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .feature-card h3 { font-size: 1.5rem; color: white; }
+        .feature-card p { color: var(--text-muted); }
+        .use-cases-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; text-align: left; }
+        .use-case-item { background: var(--card-bg); padding: 30px; border-radius: 10px; }
+        .use-case-item h3 { color: white; font-size: 1.3rem; border-left: 3px solid var(--secondary-color); padding-left: 15px; }
+        .use-case-item p { color: var(--text-muted); padding-left: 18px; }
+        #demo { background-color: var(--light-bg); }
+        .demo-container { max-width: 800px; margin: 40px auto 0; background: var(--card-bg); padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
+        .demo-textarea { width: 100%; height: 120px; background: var(--dark-bg); border: 1px solid #444; border-radius: 8px; padding: 15px; color: var(--text-color); font-family: inherit; font-size: 1rem; resize: vertical; }
+        .demo-textarea:focus { outline: none; border-color: var(--primary-color); }
+        .demo-controls { margin-top: 20px; text-align: center; }
+        .demo-output { margin-top: 30px; padding: 20px; background: var(--dark-bg); border-radius: 8px; min-height: 100px; text-align: left; color: var(--text-muted); white-space: pre-wrap; }
+        .thinking { display: flex; align-items: center; justify-content: center; }
+        .thinking .dot { width: 10px; height: 10px; margin: 0 5px; background-color: var(--secondary-color); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .thinking .dot1 { animation-delay: -0.32s; }
+        .thinking .dot2 { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+        .dev-section { background-color: var(--dark-bg); padding: 60px 0; }
+        .footer { background-color: #0c0c0c; padding: 40px 0; text-align: center; color: var(--text-muted); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .footer-links { margin-bottom: 20px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; margin: 0 15px; transition: color 0.3s ease; }
+        .footer-links a:hover { color: white; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; height: 3rem; }
+            .hero .typewriter-cursor { height: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .section-title { font-size: 2rem; }
+            .use-cases-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HTML结构部分保持不变 -->
+    <header class="header">
+        <nav class="navbar">
+            <a href="#" class="logo">灵境<span>AetherMind</span></a>
+            <ul class="nav-links">
+                <li><a href="#features">核心特性</a></li>
+                <li><a href="#use-cases">应用场景</a></li>
+                <li><a href="#demo">在线体验</a></li>
+                <li><a href="https://example.com/docs" target="_blank">开发者文档</a></li>
+            </ul>
+            <a href="#demo" class="btn btn-primary">开始使用</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>
+                    <span id="typewriter"></span><span class="typewriter-cursor"></span>
+                </h1>
+                <p>我们自主研发的下一代人工智能模型，旨在以前所未有的方式理解、生成和协作，释放无限创造力。</p>
+                <a href="#demo" class="btn btn-primary">立即体验</a>
+            </div>
+        </section>
+
+        <!-- 其他 Section (保持不变) -->
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title">释放AI的全部潜能</h2>
+                <p class="section-subtitle">灵境AetherMind不仅仅是一个模型，更是一个强大的智能伙伴，具备以下卓越能力。</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="icon">🧠</div>
+                        <h3>超凡的理解能力</h3>
+                        <p>基于先进的神经网络架构，能够深度理解复杂的语境、多义词和微妙的情感，实现更精准的交互。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">✨</div>
+                        <h3>卓越的生成创造</h3>
+                        <p>从撰写文章、生成代码到创作诗歌和剧本，AetherMind能够产出高质量、富有逻辑和创造力的内容。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">⚙️</div>
+                        <h3>无缝的集成与扩展</h3>
+                        <p>提供简洁、高效的API接口，可以轻松集成到您现有的应用和服务中，并支持根据特定领域进行微调。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="use-cases" class="section">
+            <div class="container">
+                <h2 class="section-title">驱动各行各业的创新</h2>
+                <p class="section-subtitle">探索灵境AetherMind如何在不同场景中发挥价值，提升效率，创造可能。</p>
+                <div class="use-cases-grid">
+                    <div class="use-case-item">
+                        <h3>智能内容创作</h3>
+                        <p>自动生成博客文章、营销文案、社交媒体帖子，大幅提升内容生产效率。</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h3>代码辅助与生成</h3>
+                        <p>帮助开发者编写、调试和优化代码，解释复杂算法，成为强大的编程伙伴。</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h3>复杂数据分析</h3>
+                        <p>从海量非结构化数据中提取关键信息，生成易于理解的摘要和洞察报告。</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h3>自动化客户服务</h3>
+                        <p>构建7x24小时在线的智能客服，准确回答用户问题，提升客户满意度。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="demo" class="section">
+            <div class="container">
+                <h2 class="section-title">亲身体验AetherMind</h2>
+                <p class="section-subtitle">在下方输入您的指令，感受AetherMind的强大能力。例如：“写一首关于星空的短诗”</p>
+                <div class="demo-container">
+                    <textarea id="demo-input" class="demo-textarea" placeholder="在这里输入您的指令..."></textarea>
+                    <div class="demo-controls">
+                        <button id="demo-submit" class="btn btn-primary">生成内容</button>
+                    </div>
+                    <div class="demo-output" id="demo-output">
+                        AetherMind的回答将在这里显示...
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="developers" class="section dev-section">
+            <div class="container">
+                 <h2 class="section-title">为开发者而生</h2>
+                 <p class="section-subtitle">我们提供强大、简洁的API和完善的开发文档，让您可以在几分钟内将AetherMind的智能集成到您的产品中。</p>
+                 <a href="https://example.com/docs" target="_blank" class="btn btn-primary">查看API文档</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">联系我们</a>
+                <a href="#">隐私政策</a>
+                <a href="#">服务条款</a>
+            </div>
+            <p>&copy; 2024 [您的公司名称]. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ========================================================== -->
+    <!-- ========= 重点：这里是已修复并优化的 JavaScript 代码 ========= -->
+    <!-- ========================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- 增强且已修复的打字机效果 ---
+            const typewriterElement = document.getElementById('typewriter');
+            const textsToType = [
+                "灵境 AetherMind",
+                "赋能无限创造力",
+                "连接未来与现在",
+                "您的智能协作伙伴"
+            ];
+            let textIndex = 0;       // 当前句子的索引
+            let charIndex = 0;       // 当前字符的索引
+            let isErasing = false;   // 是否正在删除的状态标志
+
+            // 定义各种延迟时间 (单位: 毫秒)
+            const typingSpeed = 120;       // 打字速度
+            const erasingSpeed = 60;       // 删除速度
+            const pauseAfterTyping = 2000; // 打完字后的停留时间
+            const pauseAfterErasing = 500; // 删除完后的停留时间
+
+            function typewriterLoop() {
+                const currentText = textsToType[textIndex];
+                // 根据当前是打字还是删除，决定基础速度
+                let timeout = isErasing ? erasingSpeed : typingSpeed;
+
+                if (isErasing) {
+                    // --- 删除逻辑 ---
+                    // 从后往前减少字符串长度
+                    typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    // --- 打字逻辑 ---
+                    // 从前往后增加字符串长度
+                    typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                // --- 状态切换判断 ---
+                // 如果不是在删除，并且已经打完了整句话
+                if (!isErasing && charIndex === currentText.length) {
+                    // 切换到删除状态，并设置较长的暂停时间
+                    isErasing = true;
+                    timeout = pauseAfterTyping;
+                } 
+                // 如果是在删除，并且已经删完了整句话
+                else if (isErasing && charIndex === 0) {
+                    // 切换到打字状态，并准备下一句话
+                    isErasing = false;
+                    textIndex = (textIndex + 1) % textsToType.length; // 循环到下一句
+                    timeout = pauseAfterErasing;
+                }
+                
+                // 设置下一次执行
+                setTimeout(typewriterLoop, timeout);
+            }
+            
+            // 页面加载完毕后，启动打字机循环
+            typewriterLoop();
+
+
+            // --- 模拟AI Demo (此部分逻辑不变) ---
+            const submitBtn = document.getElementById('demo-submit');
+            const inputArea = document.getElementById('demo-input');
+            const outputArea = document.getElementById('demo-output');
+
+            submitBtn.addEventListener('click', function() {
+                const prompt = inputArea.value.trim();
+                if (prompt === "") {
+                    outputArea.textContent = "请输入一些内容，让我为您生成回答。";
+                    return;
+                }
+
+                outputArea.innerHTML = `<div class="thinking"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div></div>`;
+
+                setTimeout(() => {
+                    let response = "";
+                    if (prompt.includes("诗") || prompt.includes("星空")) {
+                        response = "好的，这是一首关于星空的短诗：\n\n深邃夜幕，钻石遍撒，\n古老光芒，穿越神话。\n寂静诉说，宇宙之大，\n瞬间仰望，心已天涯。";
+                    } else if (prompt.includes("代码") || prompt.includes("python")) {
+                        response = "当然，这是一个用Python实现的简单斐波那契数列函数：\n\n```python\ndef fibonacci(n):\n    a, b = 0, 1\n    while a < n:\n        print(a, end=' ')\n        a, b = b, a+b\n\nfibonacci(100)\n```";
+                    } else if (prompt.includes("你好") || prompt.includes("介绍")) {
+                        response = "你好！我是灵境AetherMind，一个由[您的公司名称]自主研发的大型语言模型。我擅长理解自然语言、生成文本、编写代码等多种任务。很高兴为您服务！";
+                    } else {
+                        response = "感谢您的提问。作为一个演示版本，我生成了这段通用的回答。在实际应用中，我会根据您的问题'"+ prompt +"'提供更具针对性的、富有创造力的回答。灵境AetherMind致力于理解并回应世界上最复杂的问题，推动知识和创造力的边界。";
+                    }
+                    outputArea.textContent = response;
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
